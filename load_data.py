@@ -1,11 +1,23 @@
+"""
+  Data ingestion
+"""
+
 import pandas as pd
 from fastparquet import ParquetFile
 
-df_first_names = pd.read_json(
-    path_or_buf='data/most-popular-first-names-by-municipality.jsonl.gz',
-    lines=True,
-    compression='gzip'
-)
+
+def load_jsonl_gz_data(path: str):
+    """
+    Load gzip-compressed jsonl data.
+    :param str path: Path to file
+    :return: DataFrame object of the data
+    """
+
+    return pd.read_json(path, lines=True, compression='gzip')
+
+
+df_first_names = load_jsonl_gz_data(
+    'data/most-popular-first-names-by-municipality.jsonl.gz')
 
 print(df_first_names.head)
 
