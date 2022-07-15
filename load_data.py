@@ -21,7 +21,7 @@ def load_jsonl_gz_data(file: str):
     :param str path: Path to file
     :return: DataFrame object of the data
     """
-    logging.info(f'Reading file: {file}')
+    logging.info(f'Reading file: {path}')
     return pd.read_json(file, lines=True, compression='gzip')
 
 
@@ -31,29 +31,26 @@ def load_parquet_data(file: str):
     :param str path: Path to file
     :return DataFrame object of the data:
     """
-    logging.info(f'Reading file: {file}')
+    logging.info(f'Reading file: {path}')
     return ParquetFile(file).to_pandas()
 
 
-def load_data(path: list):
+def load_data(filepath: str):
     """"Load data from list of files. Infer filetypes."""
 
-    for f in os.listdir(path):
-
-        if f.endswith('.jsonl.gz'):
-            load_jsonl_gz_data(path + f)
-        elif f.endswith('.parquet'):
-            load_parquet_data(path + f)
-        else:
-            logging.info(
-                f'Function {load_data.__name__} encountered unknown file type in file {f}')
+    if filepath.endswith('.jsonl.gz'):
+        load_jsonl_gz_data(filepath)
+    elif filepath.endswith('.parquet'):
+        load_parquet_data(filepath)
+    else:
+        logging.info(
+            f'Function {load_data.__name__} encountered unknown file type in file {filepath}')
 
     return
 
 
 def main():
     """"docstring"""
-
     load_data(DATA_FILES_PATH)
 
 
