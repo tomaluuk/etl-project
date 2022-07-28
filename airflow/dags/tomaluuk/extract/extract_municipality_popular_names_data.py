@@ -9,12 +9,12 @@ import logging
 from fastparquet import ParquetFile
 import pandas as pd
 from sqlalchemy.types import Integer, VARCHAR
-from utils import get_engine, load_config
+from tomaluuk.extract.utils import get_engine, load_config
 
 logging.basicConfig(level=logging.INFO)
 engine = get_engine()
 
-DATA_FILES_PATH = "./airflow/dags/data/"
+DATA_FILES_PATH = "/opt/airflow/dags/tomaluuk/data/"
 DATA_FILES = os.listdir(DATA_FILES_PATH)
 
 

@@ -10,8 +10,8 @@ from sqlalchemy import create_engine
 def load_config(name=None):
     """'Loads configuration from local file"""
 
-    f = open("./config.json", encoding='utf-8')
-    config = json.load(f)
+    with open('/opt/airflow/dags/tomaluuk/config.json', encoding='utf-8') as f:
+        config = json.load(f)
 
     if name is not None:
         return config[name]
