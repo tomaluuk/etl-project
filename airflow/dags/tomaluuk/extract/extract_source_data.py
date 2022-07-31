@@ -81,7 +81,7 @@ def write_to_db(data, table_name, schema, db_engine):
 
 
 def main():
-    """"docstring"""
+    """"Extract data from files and write them unaltered into a source data schema"""
     source_data_config = load_config('source_data')
     # db_tables = config['source_data']
     # data_files = config['files'].keys()
@@ -101,13 +101,6 @@ def main():
             schema=SOURCE_SCHEMA,
             db_engine=db_engine
         )
-    # municipalities = load_data_to_df(
-    #    os.path.join(DATA_FILES_PATH, "most-popular-first-names-by-municipality.jsonl.gz"))
-    # print(municipalities.head())
-
-
-# write_to_db(data=municipality_data, table_name='municipality',
-#     db_engine=engine, schema='population', dtype=municipality_dtypes)
 
 
 if __name__ == "__main__":
