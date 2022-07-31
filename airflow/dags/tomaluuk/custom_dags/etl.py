@@ -46,13 +46,28 @@ with DAG(
     tags=['example'],
 ) as dag:
 
+    extract_source_data_task = PythonOperator(
+        task_id='extract-source-data',
+        python_callable=extract_source_data.main
+    )
+
     create_tables_task = PostgresOperator(
         task_id="create-tables",
         postgres_conn_id='postgres_airflow_worker',
         sql="sql/create_tables.sql"
     )
-    extract_source_data_task = PythonOperator(
-        task_id='extract-source-data',
-        python_callable=extract_source_data.main
+
+    insert_data_task = PostgresOperator(
+        task_id="insert-data",
+        postgres_conn_id='postgres_airflow_worker',
+        sql="sql/insert_data.sql"
     )
-    create_tables_task >> extract_source_data_task
+
+    # municipality_data_task = PostgresOperator(
+    #    task_id="municipality-data",
+    #    postgres_conn_id='postgres_airflow_worker',
+    #    sql="sql/municipality_data.sql"
+    # )
+
+    extract_source_data_task >> create_tables_task
+    create_tables_task >> insert_data_task
