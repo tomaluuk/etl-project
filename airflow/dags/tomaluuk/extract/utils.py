@@ -19,18 +19,11 @@ def load_config(name=None):
     return config
 
 
-def get_airflow_engine():
-    """Returns the database engine"""
-    db_conn_str = os.environ['AIRFLOW__DATABASE__SQL_ALCHEMY_CONN']
-    engine = create_engine(db_conn_str)
-    return engine
-
-
 def get_engine():
     """Returns the database engine"""
-    db_config = load_config('db')
+    db_config = load_config('db_connection')
     engine = create_engine(
-        f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['dbname']}")
+        f"postgresql+psycopg2://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['dbname']}")
     return engine
 
 
@@ -65,8 +58,3 @@ def load_data_to_df(filepath: str):
         f'Function {load_data_to_df.__name__} encountered unknown file type in file {filepath}')
 
     return None
-
-
-def write_df_to_db(data: pd.DataFrame, ):
-    """Writes data from DataFrame to database"""
-    return
