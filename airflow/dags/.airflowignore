@@ -1,2 +1,2 @@
-tomaluuk/data/.*
-tomaluuk/sql/.*
+tomaluuk/dags/data/.*
+tomaluuk/dags/sql/.*
