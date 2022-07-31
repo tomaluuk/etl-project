@@ -1,5 +1,5 @@
 """
-  Data ingestion
+  Source data ingestion
 """
 
 __author__ = "Topi Luukkanen"
@@ -9,13 +9,23 @@ import logging
 from fastparquet import ParquetFile
 import pandas as pd
 from sqlalchemy.types import Integer, VARCHAR
+from sqlalchemy.schema import CreateSchema
 from tomaluuk.extract.utils import get_engine, load_config
 
 logging.basicConfig(level=logging.INFO)
-engine = get_engine()
 
 DATA_FILES_PATH = "/opt/airflow/dags/tomaluuk/data/"
 DATA_FILES = os.listdir(DATA_FILES_PATH)
+SOURCE_SCHEMA = 'sources'
+
+
+def create_schema(name: str, db_engine):
+    try:
+        if not db_engine.dialect.has_schema(db_engine, name):
+            db_engine.execute(CreateSchema(name))
+    except Exception as e:
+        logging.error(f'Unable to create schema "{name}"')
+        logging.error(str(e))
 
 
 def load_jsonl_gz_data(file: str) -> pd.DataFrame:
@@ -50,15 +60,8 @@ def load_data_to_df(filepath: str):
     return
 
 
-def set_data_types(dtypes: str):
-    """Sets SQL Alchemy data types from strings"""
-    res = []
-    dtypes.rep
-
-
 def write_to_db(data, table_name, schema, db_engine):
-    """writes data to tables"""
-    #sqlalc_dtypes = set_data_types(dtypes)
+    """Write data to tables"""
 
     logging.info(f"Writing table to db: {schema}.{table_name}")
 
@@ -76,19 +79,23 @@ def write_to_db(data, table_name, schema, db_engine):
 
 def main():
     """"docstring"""
-    config = load_config()
-    db_tables = config['db_tables']
+    source_data_config = load_config('source_data')
+    # db_tables = config['source_data']
+    # data_files = config['files'].keys()
     db_engine = get_engine()
 
-    for table, specs in zip(db_tables.keys(), db_tables.values()):
+    create_schema(SOURCE_SCHEMA, db_engine)
+
+    for key in source_data_config['data']:
+        specs = source_data_config['data'][key]
         df = load_data_to_df(
-            os.path.join(DATA_FILES_PATH, specs['filename'])
+            os.path.join(source_data_config['path'], specs['file_name'])
         )
 
         write_to_db(
-            data=df[specs['columns']],
-            table_name=table,
-            schema=specs['schema'],
+            data=df,
+            table_name=specs["table_name"],
+            schema=SOURCE_SCHEMA,
             db_engine=db_engine
         )
     # municipalities = load_data_to_df(
