@@ -147,6 +147,8 @@ cython_debug/
 # Visual Studio Code hidden folder
 .vscode/
 
-# Configuration file with 
+# Configuration file 
 config.json
-airflow/logs/scheduler/latest
+
+# airflow logs
+airflow/logs/*
