@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS population AUTHORIZATION airflow;
+
 CREATE TABLE IF NOT EXISTS population.electoral_district
 (
     electoral_district_number integer NOT NULL,
@@ -11,7 +13,7 @@ CREATE TABLE IF NOT EXISTS population.region
     region_number integer NOT NULL,
     name_fi character varying(255),
     name_se character varying(255),
-    PRIMARY KEY ("number")
+    PRIMARY KEY (region_number)
 );
 
 CREATE TABLE IF NOT EXISTS population.municipality
@@ -23,11 +25,13 @@ CREATE TABLE IF NOT EXISTS population.municipality
     name_se character varying(255),
     type character varying(255),
     primary_language character varying(255),
-    PRIMARY KEY (municipality_number)
-    FOREIGN KEY (electoral_district_number)
-        REFERENCES population.electoral_district(electoral_district_number)
-    FOREIGN KEY (region_number)
-        REFERENCES population.region(region_number)
+    PRIMARY KEY (municipality_number),
+    CONSTRAINT fk_electoral_district
+        FOREIGN KEY (electoral_district_number)
+            REFERENCES population.electoral_district(electoral_district_number),
+    CONSTRAINT fk_region
+        FOREIGN KEY (region_number)
+            REFERENCES population.region(region_number)
 );
 
 
@@ -39,6 +43,7 @@ CREATE TABLE IF NOT EXISTS population.birth_name_stats
     first_name character varying(255),
     amount integer,
     PRIMARY KEY (birth_name_stats_id),
-    FOREIGN KEY (municipality_number)
-        REFERENCES population.municipality(municipality_number)
+    CONSTRAINT fk_municipality
+        FOREIGN KEY (municipality_number)
+            REFERENCES population.municipality(municipality_number)
 );
