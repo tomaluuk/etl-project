@@ -120,13 +120,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
 # mkdocs documentation
 /site
 
@@ -156,3 +149,4 @@ cython_debug/
 
 # Configuration file with 
 config.json
+airflow/logs/scheduler/latest
