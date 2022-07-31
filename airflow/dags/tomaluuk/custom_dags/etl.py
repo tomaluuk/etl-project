@@ -63,11 +63,5 @@ with DAG(
         sql="sql/insert_data.sql"
     )
 
-    # municipality_data_task = PostgresOperator(
-    #    task_id="municipality-data",
-    #    postgres_conn_id='postgres_airflow_worker',
-    #    sql="sql/municipality_data.sql"
-    # )
-
     extract_source_data_task >> create_tables_task
     create_tables_task >> insert_data_task
