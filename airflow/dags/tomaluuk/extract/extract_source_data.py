@@ -52,9 +52,12 @@ def load_data_to_df(filepath: str):
     """"Load data from list of files. Infer filetypes."""
 
     if filepath.endswith('.jsonl.gz'):
-        return load_jsonl_gz_data(filepath)
+        data = load_jsonl_gz_data(filepath)
     if filepath.endswith('.parquet'):
-        return load_parquet_data(filepath)
+        data = load_parquet_data(filepath)
+    if data is not None:
+        data.columns = map(str.lower, data.columns)
+        return data
     logging.info(
         f'Function {load_data_to_df.__name__} encountered unknown file type in file {filepath}')
     return
