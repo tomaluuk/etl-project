@@ -83,8 +83,6 @@ def write_to_db(data, table_name, schema, db_engine):
 def main():
     """"Extract data from files and write them unaltered into a source data schema"""
     source_data_config = load_config('source_data')
-    # db_tables = config['source_data']
-    # data_files = config['files'].keys()
     db_engine = get_engine()
 
     create_schema(SOURCE_SCHEMA, db_engine)
